@@ -5,18 +5,22 @@ const {
 const schedule = require('node-schedule');
 const moment = require('moment');
 const events = require('events');
-const rp = require('request-promise');
+const steamcmd = require('steamcmd');
+const path = require('path');
+require("file-logger")(true);
 
 // http://arkdedicated.com/version
 // TODO: apply rcon.end fix on every machine where this app is used
 
 const save_hour = 5;
 const save_minute = 0
-const patch_url = 'http://arkdedicated.com/version';
 var Emitter = new events.EventEmitter();
 var patch_version = '0';
+var steam_opts = {
+  "binDir": path.join(__dirname, 'steamcmd_bin')
+}
 
-console.log(config.server.length);
+console.log('Servers to watch:', config.server.length);
 
 
 config.server.forEach(element => {
@@ -51,21 +55,17 @@ var saveworld = async function saveworld() {
 Emitter.on('saveworld', saveworld);
 //Patch Check
 var patch_update_check = async function patch_update_check() {
-  rp(patch_url)
-  .then(function (htmlString) {
-    // console.log(htmlString);
-    if(patch_version == 0){
-      console.log('version changed from 0 to string', htmlString);
-      patch_version = htmlString;
-    } else if(patch_version != htmlString){
-      // UPDATE!!!
-      console.log('Patch found!!!');
-      Emitter.emit('patch_update');
-    }
-  })
-  .catch(function (err) {
-    // Crawling failed...
-  });
+  const info = await steamcmd.getAppInfo(376030, steam_opts);
+  let htmlString = info.depots.branches.public.buildid;
+  console.log('Patch:', htmlString);
+  if (patch_version == 0) {
+    console.log('version changed from 0 to string', htmlString);
+    patch_version = htmlString;
+  } else if (patch_version != htmlString) {
+    // UPDATE!!!
+    console.log('Patch found!!!');
+    Emitter.emit('patch_update');
+  }
 };
 Emitter.on('patch_update_check', patch_update_check);
 //Patch found!
@@ -76,6 +76,9 @@ var patch_update = async function patch_update() {
 Emitter.on('patch_update', patch_update);
 
 async function main() {
+  steamcmd.download(steam_opts);
+  steamcmd.touch(steam_opts);
+  steamcmd.prep(steam_opts);
 
   // Emitter.emit('broadcast', ":) ;) :D :( >:) :| :o :p");
   var j = schedule.scheduleJob('0 * * * * *', async function () {

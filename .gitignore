@@ -4,3 +4,6 @@ node_modules
 *.exe
 config.json
 notes
+steamcmd_bin
+logs
+sunny-cron
