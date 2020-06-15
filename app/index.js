@@ -76,9 +76,9 @@ var patch_update = async function patch_update() {
 Emitter.on('patch_update', patch_update);
 
 async function main() {
-  steamcmd.download(steam_opts);
-  steamcmd.touch(steam_opts);
-  steamcmd.prep(steam_opts);
+  await steamcmd.download(steam_opts);
+  await steamcmd.touch(steam_opts);
+  await steamcmd.prep(steam_opts);
 
   // Emitter.emit('broadcast', ":) ;) :D :( >:) :| :o :p");
   var j = schedule.scheduleJob('0 * * * * *', async function () {
