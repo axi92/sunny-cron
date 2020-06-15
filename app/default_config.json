@@ -1,0 +1,15 @@
+{
+  "server": [{
+      "name": "Servername1",
+      "ip": "0.0.0.0",
+      "rcon-port": "111111",
+      "rconpassword": "changeme"
+    },
+    {
+      "name": "Servername2",
+      "ip": "0.0.0.1",
+      "rcon-port": "222222",
+      "rconpassword": "changeme"
+    }
+  ]
+}

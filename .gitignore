@@ -1,0 +1,6 @@
+node_modules
+*-linux
+*-macos
+*.exe
+config.json
+notes
