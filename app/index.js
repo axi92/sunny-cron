@@ -22,7 +22,6 @@ var steam_opts = {
 
 console.log('Servers to watch:', config.server.length);
 
-
 config.server.forEach(element => {
   element.rcon = new Rcon({
     host: element.ip,
@@ -60,12 +59,12 @@ var patch_update_check = async function patch_update_check() {
   console.log('Patch:', htmlString);
   if (patch_version == 0) {
     console.log('version changed from 0 to string', htmlString);
-    patch_version = htmlString;
   } else if (patch_version != htmlString) {
     // UPDATE!!!
     console.log('Patch found!!!');
     Emitter.emit('patch_update');
   }
+  patch_version = htmlString;
 };
 Emitter.on('patch_update_check', patch_update_check);
 //Patch found!
