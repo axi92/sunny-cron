@@ -79,6 +79,11 @@ async function main() {
   await steamcmd.touch(steam_opts);
   await steamcmd.prep(steam_opts);
 
+  //Debuging:
+  await config.server[0].rcon.connect();
+  await console.log(await config.server[0].rcon.send("GetGameLog"));
+  await config.server[0].rcon.end();
+
   // Emitter.emit('broadcast', ":) ;) :D :( >:) :| :o :p");
   var j = schedule.scheduleJob('0 * * * * *', async function () {
     let hour = moment().format('H');
