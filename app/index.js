@@ -29,14 +29,14 @@ config.server.forEach(element => {
     password: element.rconpassword
   });
 
-  element.rcon.on("connect", () => console.log("connected", this));
-  element.rcon.on("authenticated", () => console.log("authenticated"));
-  element.rcon.on("end", () => console.log("end"));
+  element.rcon.on("connect", () => console.log("connected", element.name));
+  element.rcon.on("authenticated", () => console.log("authenticated", element.name));
+  element.rcon.on("end", () => console.log("end", element.name));
 });
 
 var broadcast = async function broadcast(message) {
   config.server.forEach(async element => {
-    console.log(message);
+    console.log(element.name, message);
     await element.rcon.connect();
     await element.rcon.send("Broadcast " + message);
     await element.rcon.end();
