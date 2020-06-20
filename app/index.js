@@ -36,9 +36,11 @@ config.server.forEach(element => {
 
 var broadcast = async function broadcast(message) {
   config.server.forEach(async element => {
-    console.log(element.name, message);
-    await element.rcon.connect();
+    if (!element.rcon.socket) {
+      await element.rcon.connect();
+    }
     await element.rcon.send("Broadcast " + message);
+    console.log(element.name, message);
     await element.rcon.end();
   });
 };
@@ -46,8 +48,11 @@ Emitter.on('broadcast', broadcast);
 // Saveworld
 var saveworld = async function saveworld() {
   config.server.forEach(async element => {
-    await element.rcon.connect();
+    if (!element.rcon.socket) {
+      await element.rcon.connect();
+    }
     await element.rcon.send("SaveWorld");
+    console.log('SaveWorld on:', element.name);
     await element.rcon.end();
   });
 };
@@ -70,7 +75,9 @@ Emitter.on('patch_update_check', patch_update_check);
 //Patch found!
 var patch_update = async function patch_update() {
   Emitter.emit('broadcast', "[DE] ARK Patch gefunden, es kann sein das die Server bald neustarten, es wird zur Sicherheit gespeichert!\n[EN] ARK Patch found, it is possible that the servers will restart soon! Server save!");
-  Emitter.emit('saveworld');
+  setTimeout(() => {
+    Emitter.emit('saveworld');
+  }, 3000);
 };
 Emitter.on('patch_update', patch_update);
 
@@ -79,17 +86,11 @@ async function main() {
   await steamcmd.touch(steam_opts);
   await steamcmd.prep(steam_opts);
 
-  //Debuging:
-  await config.server[0].rcon.connect();
-  await console.log(await config.server[0].rcon.send("GetGameLog"));
-  await config.server[0].rcon.end();
-
-  // Emitter.emit('broadcast', ":) ;) :D :( >:) :| :o :p");
+  // Emitter.emit('broadcast', "Test");
   var j = schedule.scheduleJob('0 * * * * *', async function () {
     let hour = moment().format('H');
     let minute = moment().format('m');
-    // console.log(hour, minute);
-    if (hour == save_hour || (hour == save_hour - 1 && save_minute == 0)) {
+    if ( (hour == save_hour && save_minute == 0) || (hour == save_hour - 1 && save_minute != 0) ) {
       let calc_minute_left;
       if (save_minute == 0) calc_minute_left = 60
       else calc_minute_left = save_minute;
