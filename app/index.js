@@ -51,6 +51,7 @@ var saveworld = async function saveworld() {
     if (!element.rcon.socket) {
       await element.rcon.connect();
     }
+    await element.rcon.send("Broadcast [DE] Server wird gespeichert!\n[EN] Server save!");
     await element.rcon.send("SaveWorld");
     console.log('SaveWorld on:', element.name);
     await element.rcon.end();
@@ -61,7 +62,7 @@ Emitter.on('saveworld', saveworld);
 var patch_update_check = async function patch_update_check() {
   const info = await steamcmd.getAppInfo(376030, steam_opts);
   let htmlString = info.depots.branches.public.buildid;
-  console.log('Patch:', htmlString);
+  // console.log('Patch:', htmlString);
   if (patch_version == 0) {
     console.log('version changed from 0 to string', htmlString);
   } else if (patch_version != htmlString) {
@@ -90,7 +91,7 @@ async function main() {
   var j = schedule.scheduleJob('0 * * * * *', async function () {
     let hour = moment().format('H');
     let minute = moment().format('m');
-    if ( (hour == save_hour && save_minute == 0) || (hour == save_hour - 1 && save_minute != 0) ) {
+    if ( (hour == save_hour && minute == save_minute) || (hour == save_hour - 1 && minute != 0) ) {
       let calc_minute_left;
       if (save_minute == 0) calc_minute_left = 60
       else calc_minute_left = save_minute;
@@ -103,7 +104,6 @@ async function main() {
       }
     }
     if (hour == save_hour && minute == save_minute) {
-      Emitter.emit('broadcast', "[DE] Server wird gespeichert!\n[EN] Server save!");
       Emitter.emit('saveworld');
     }
   });
