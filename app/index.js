@@ -26,7 +26,8 @@ config.server.forEach(element => {
   element.rcon = new Rcon({
     host: element.ip,
     port: element.rconport,
-    password: element.rconpassword
+    password: element.rconpassword,
+    timeout: 15000
   });
 
   element.rcon.on("connect", () => console.log("connected", element.name));
@@ -91,7 +92,7 @@ async function main() {
   var j = schedule.scheduleJob('0 * * * * *', async function () {
     let hour = moment().format('H');
     let minute = moment().format('m');
-    if ( (hour == save_hour && minute == save_minute) || (hour == save_hour - 1 && minute != 0) ) {
+    if ( moment() <= moment().hour(save_hour).minute(save_minute) && moment() >= moment().hour(save_hour).minute(save_minute).subtract(10, 'minutes') ) {
       let calc_minute_left;
       if (save_minute == 0) calc_minute_left = 60
       else calc_minute_left = save_minute;
