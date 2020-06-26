@@ -13,7 +13,7 @@ require("file-logger")(true);
 // TODO: apply rcon.end fix on every machine where this app is used
 
 const save_hour = 5;
-const save_minute = 0
+const save_minute = 0;
 var Emitter = new events.EventEmitter();
 var patch_version = '0';
 var steam_opts = {
@@ -42,7 +42,6 @@ var broadcast = async function broadcast(message) {
     }
     await element.rcon.send("Broadcast " + message);
     console.log(element.name, message);
-    await element.rcon.end();
   });
 };
 Emitter.on('broadcast', broadcast);
@@ -55,7 +54,6 @@ var saveworld = async function saveworld() {
     await element.rcon.send("Broadcast [DE] Server wird gespeichert!\n[EN] Server save!");
     await element.rcon.send("SaveWorld");
     console.log('SaveWorld on:', element.name);
-    await element.rcon.end();
   });
 };
 Emitter.on('saveworld', saveworld);
