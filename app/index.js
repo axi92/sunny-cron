@@ -59,7 +59,7 @@ var saveworld = async function saveworld() {
 Emitter.on('saveworld', saveworld);
 //Patch Check
 var patch_update_check = async function patch_update_check() {
-  const info = await steamcmd.getAppInfo(376030, steam_opts);
+  let info = await steamcmd.getAppInfo(376030, steam_opts);
   let htmlString = info.depots.branches.public.buildid;
   // console.log('Patch:', htmlString);
   if (patch_version == 0) {
@@ -74,7 +74,7 @@ var patch_update_check = async function patch_update_check() {
 Emitter.on('patch_update_check', patch_update_check);
 //Patch found!
 var patch_update = async function patch_update() {
-  Emitter.emit('broadcast', "[DE] ARK Patch gefunden, es kann sein das die Server bald neustarten, es wird zur Sicherheit gespeichert!\n[EN] ARK Patch found, it is possible that the servers will restart soon! Server save!");
+  Emitter.emit('broadcast', "[DE] ARK Server Patch gefunden, es wird zur Sicherheit gespeichert, neustart erfolgt nicht automatisch!\n[EN] ARK Patch found. No automatic restart! Server save!");
   setTimeout(() => {
     Emitter.emit('saveworld');
   }, 3000);
