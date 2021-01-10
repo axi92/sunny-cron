@@ -57,6 +57,17 @@ var saveworld = async function saveworld() {
   });
 };
 Emitter.on('saveworld', saveworld);
+// clearbeehive
+var clearbeehive = async function clearbeehive() {
+  config.server.forEach(async element => {
+    if (!element.rcon.socket) {
+      await element.rcon.connect();
+    }
+    await element.rcon.send("DestroyAll BeeHive_C");
+    console.log('Beehive clear on:', element.name);
+  });
+};
+Emitter.on('clearbeehive', clearbeehive);
 //Patch Check
 var patch_update_check = async function patch_update_check() {
   let info = await steamcmd.getAppInfo(376030, steam_opts);
@@ -111,5 +122,8 @@ async function main() {
     Emitter.emit('patch_update_check');
   });
   // console.log(await rcon.send("DoExit"));
+  var jjj = schedule.scheduleJob('0 0 4 * * *', async function () {
+    Emitter.emit('clearbeehive');
+  });
 }
 main().catch(console.error);
