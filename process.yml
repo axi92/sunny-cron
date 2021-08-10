@@ -6,3 +6,4 @@ apps:
     kill_timeout : 3000
     min_uptime: "10s"
     max_restarts: 15
+    log_date_format: “YYYY-MM-DD HH:mm Z”
